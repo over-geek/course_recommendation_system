@@ -3,8 +3,10 @@ import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import linear_kernel
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 
 # loading the dataset
 df = pd.read_csv("dataset/edx_courses.csv")
@@ -51,15 +53,21 @@ def get_recommendations_by_subject(subject, cosine_sim=cosine_sim):
 
       course_indices = [i[0] for i in sim_scores]
 
-      recommendations[row['title']] = subject_df[['title', 'summary', 'course_description']].iloc[course_indices].to_dict('records')
+      recommendations[row['title']] = subject_df[['title', 'summary', 'course_description', 'course_url']].iloc[course_indices].to_dict('records')
 
   return recommendations
 
-@app.route('/recommend', methods=['GET'])
+@app.route('/recommend', methods=['POST'])
 def recommend():
-  subject = request.args.get('subject')
-  recommendations = get_recommendations_by_subject(subject)
-  return jsonify(recommendations)
+    try:
+        data = request.get_json()
+        subjects = data.get('subjects')
+        if not subjects:
+            return jsonify({"error": "No subjects provided"}), 400
+        recommendations = get_recommendations_by_subject(subjects[0]['name'])
+        return jsonify(recommendations)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
 
 if __name__ == '__main__':
   app.run(host='0.0.0.0', port=5000, debug=True)
