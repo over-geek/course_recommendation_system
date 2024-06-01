@@ -57,7 +57,7 @@ def get_recommendations_by_subject(subject, cosine_sim=cosine_sim):
 
   return recommendations
 
-@app.route('/recommend', methods=['POST'])
+@app.route('/recommend', methods=['GET', 'POST'])
 def recommend():
     try:
         data = request.get_json()
