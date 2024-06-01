@@ -62,9 +62,19 @@ def recommend():
     try:
         data = request.get_json()
         subjects = data.get('subjects')
-        if not subjects:
-            return jsonify({"error": "No subjects provided"}), 400
-        recommendations = get_recommendations_by_subject(subjects)
+        if not subjects or not isinstance(subjects, list):
+            return jsonify({"error": "No subjects provided or subjects is not a list"}), 400
+
+        # Extract subject names from the list of dictionaries
+        subject_names = [subject['name'] for subject in subjects if 'name' in subject]
+        if not subject_names:
+            return jsonify({"error": "No valid subject names provided"}), 400
+
+        # Generate recommendations for all subject names
+        recommendations = {}
+        for subject_name in subject_names:
+            recommendations[subject_name] = get_recommendations_by_subject(subject_name)
+
         return jsonify(recommendations)
     except Exception as e:
         return jsonify({"error": str(e)}), 400
