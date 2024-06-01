@@ -60,7 +60,8 @@ def get_recommendations_by_subject(subject, cosine_sim=cosine_sim):
 @app.route('/recommend', methods=['GET', 'POST'])
 def recommend():
     try:
-        subjects = request.args.get('subjects')
+        data = request.get_json()
+        subjects = data.get('subjects')
         if not subjects:
             return jsonify({"error": "No subjects provided"}), 400
         recommendations = get_recommendations_by_subject(subjects)
