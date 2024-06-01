@@ -63,7 +63,7 @@ def recommend():
         subjects = request.args.get('subjects')
         if not subjects:
             return jsonify({"error": "No subjects provided"}), 400
-        recommendations = get_recommendations_by_subject(subjects[0]['name'])
+        recommendations = get_recommendations_by_subject(subjects)
         return jsonify(recommendations)
     except Exception as e:
         return jsonify({"error": str(e)}), 400
