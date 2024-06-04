@@ -58,7 +58,6 @@ def get_recommendations_by_subject(subject, cosine_sim=cosine_sim):
   return recommendations
 
 @app.route('/recommend', methods=['GET', 'POST'])
-@app.route('/search', methods=['GET', 'POST'])
 def recommend():
     try:
         data = request.get_json()
@@ -80,6 +79,8 @@ def recommend():
     except Exception as e:
         return jsonify({"error": str(e)}), 400
     
+
+@app.route('/search', methods=['GET', 'POST'])
 def search():
     try:
         data = request.get_json()
