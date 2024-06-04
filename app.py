@@ -58,6 +58,7 @@ def get_recommendations_by_subject(subject, cosine_sim=cosine_sim):
   return recommendations
 
 @app.route('/recommend', methods=['GET', 'POST'])
+@app.route('/search', methods=['GET', 'POST'])
 def recommend():
     try:
         data = request.get_json()
@@ -76,6 +77,21 @@ def recommend():
             recommendations[subject_name] = get_recommendations_by_subject(subject_name)
 
         return jsonify(recommendations)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+    
+def search():
+    try:
+        data = request.get_json()
+        course_title = data.get('title')
+        if not course_title:
+            return jsonify({"error": "No course title provided"}), 400
+
+        recommendations = get_recommenations_by_title(course_title)
+        if isinstance(recommendations, str):
+            return jsonify({"error": recommendations}), 404
+
+        return jsonify(recommendations.to_dict('records'))
     except Exception as e:
         return jsonify({"error": str(e)}), 400
 
