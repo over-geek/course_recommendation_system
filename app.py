@@ -32,7 +32,7 @@ def get_recommenations_by_title(title, cosine_sim=cosine_sim):
   sim_scores = sorted(sim_scores, key=lambda x: x[1], reverse=True)
   sim_scores = sim_scores[1:4]
   course_indices = [i[0] for i in sim_scores]
-  return df[['title', 'summary', 'course_description', 'course_url']].iloc[course_indices]
+  return df[['title', 'summary', 'course_description', 'course_url', 'subject']].iloc[course_indices]
 
 # Recommendation by subject function
 def get_recommendations_by_subject(subject, cosine_sim=cosine_sim):
@@ -53,7 +53,7 @@ def get_recommendations_by_subject(subject, cosine_sim=cosine_sim):
 
       course_indices = [i[0] for i in sim_scores]
 
-      recommendations[row['title']] = subject_df[['title', 'summary', 'course_description', 'course_url']].iloc[course_indices].to_dict('records')
+      recommendations[row['title']] = subject_df[['title', 'summary', 'course_description', 'course_url', 'subject']].iloc[course_indices].to_dict('records')
 
   return recommendations
 
