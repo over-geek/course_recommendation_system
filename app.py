@@ -53,7 +53,7 @@ def get_recommendations_by_subject(subject, cosine_sim=cosine_sim):
 
       course_indices = [i[0] for i in sim_scores]
 
-      recommendations[row['title']] = subject_df[['title', 'summary', 'course_description', 'course_url', 'subject']].iloc[course_indices].to_dict('records')
+      recommendations = subject_df[['title', 'summary', 'course_description', 'course_url', 'subject']].iloc[course_indices].to_dict('records')
 
   return recommendations
 
